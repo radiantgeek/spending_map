@@ -1,0 +1,9 @@
+@(cols: String*)(body: Html*)
+@import _root_.views.html.bootstrap.tags._
+<div class="row">
+@for(h <- body) {
+    <div class="col-lg-3">
+        @h
+    </div>
+}
+</div>

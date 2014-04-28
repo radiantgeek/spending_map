@@ -1,0 +1,26 @@
+syntax: glob
+.settings/
+.idea/
+.git/
+.classpath
+.project
+*.iml
+
+conf/db/
+conf/db2/
+test/db*
+
+application.conf
+application-logger.xml
+cx.properties
+
+logs/
+project/project
+project/target
+target/
+bin/
+dist/
+kibana/
+tmp
+.history
+.cache

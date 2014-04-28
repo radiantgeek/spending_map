@@ -1,0 +1,8 @@
+@(clazz: String, links: List[Option[lib.html.tags.Link]], ul_clazz: String= "")(btnTitle: Html)
+@import _root_.views.html.bootstrap.tags._
+<div class="btn-group">
+    @btn(clazz+" dropdown-toggle", toggle="dropdown") { @btnTitle }
+    <ul class="dropdown-menu @ul_clazz pull-right" role="menu">
+        @for(l <- links) { @if(l.nonEmpty) { <li> @a(l.get) </li> } else { <li class="divider"></li> } }
+    </ul>
+</div>

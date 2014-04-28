@@ -1,0 +1,5 @@
+@(t: Int, header: String, subheader: String= "")
+<h@t>
+    @header
+    @if(subheader.trim.nonEmpty){<small>@subheader</small>}
+</h@t>

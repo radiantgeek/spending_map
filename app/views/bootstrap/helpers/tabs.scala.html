@@ -1,0 +1,14 @@
+@(list: List[lib.html.tags.Tab], clazz: String="tabs")
+<!-- Nav tabs -->
+<ul class="nav nav-@clazz">
+    @for(i<-list) { <li @if(i.active){class="active"}><a href="#@i.id" data-toggle="tab">@i.title</a> </li> }
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    @for(i<-list){
+    <div class="tab-pane fade @if(i.active){in active}" id="@i.id">
+        @i.body
+    </div>
+    }
+</div>

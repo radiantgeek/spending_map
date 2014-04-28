@@ -1,0 +1,6 @@
+@(id: String, clazz: String="", start: Long=0, min: Long=0, max: Long=100, label: Boolean=false)
+<div class="progress">
+    <div id="@id" class="progress-bar @if(clazz.nonEmpty){alert-@clazz}" role="progressbar" aria-valuenow="@start" aria-valuemin="@min" aria-valuemax="@max" style="width: @start%;">
+        <span @if(label){class="sr-only"}> <span class="progress-percent-label">@start</span>% </span>
+    </div>
+</div>

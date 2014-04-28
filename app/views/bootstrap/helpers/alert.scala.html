@@ -1,0 +1,6 @@
+@(clazz: String, closeBtn: Boolean=false)(body: => Html)
+@import _root_.views.html.bootstrap.tags._
+<div class="alert alert-@clazz @if(closeBtn){alert-dismissable}">
+    @if(closeBtn){ @btn_close("alert") }
+    @body
+</div>

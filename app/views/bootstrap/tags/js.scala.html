@@ -1,0 +1,1 @@
+@(name: String, assets: Boolean=true)<script src='@if(assets){@routes.WebJarAssets.at(WebJarAssets.locate(name+".js"))}else{/assets/js/@{name}.js}'></script>

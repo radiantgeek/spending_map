@@ -1,0 +1,13 @@
+@(style: String="default", id: String = "")(heading: Html=Html(""))(body: =>Html)(footer: Html=Html(""))
+@import _root_.views.html.bootstrap.tags._
+<div class="panel panel-@style">
+@if(heading.body.trim.nonEmpty) {
+    <div class="panel-heading"> @heading </div>
+}
+    <div class="panel-body">
+@body
+    </div>
+@if(footer.body.trim.nonEmpty) {
+    <div class="panel-footer"> @footer </div>
+}
+</div>

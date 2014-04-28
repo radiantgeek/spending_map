@@ -1,0 +1,1 @@
+@(name: String, assets: Boolean=true)<link rel='stylesheet' href='@if(assets){@routes.WebJarAssets.at(WebJarAssets.locate(name+".css"))}else{/assets/css/@{name}.css}'>

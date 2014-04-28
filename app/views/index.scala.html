@@ -1,0 +1,118 @@
+@(page: lib.html.Page)
+@import bootstrap.tags._
+@import bootstrap.helpers._
+@layout.layout(page) {
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <h3 class="page-header">Карта контрактов <small>Узнай, куда уходят деньги</small> </h3>
+
+            <div id="carousel-example-generic" class="carousel slide" style="width: 750px" data-ride="carousel" data-interval="10000">
+                    <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                </ol>
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img class="thumbnail" width="750" src="@routes.Assets.at("images/search.form.jpg")">
+                        <div class="carousel-caption">
+                            <h4>Начните поиск</h4>
+                            <p>Фильтры по различным параметрам,
+                                <br/>включая местоположения заказчиков и поставщиков</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="thumbnail" width="750" src="@routes.Assets.at("images/results.heatmap.jpg")">
+                        <div class="carousel-caption">
+                            <h4>Исследуйте результаты</h4>
+                            <p>Смотрите результате на картах и диаграммах</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="thumbnail" width="750" src="@routes.Assets.at("images/result.ranges.jpg")">
+                        <div class="carousel-caption">
+                            <h4>Исследуйте результаты</h4>
+                            <p>Используйте фильтры для поиска интересных закономерностей</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img class="thumbnail" width="750" src="@routes.Assets.at("images/result.filters.jpg")">
+                        <div class="carousel-caption">
+                            <h4>Исследуйте результаты</h4>
+                            <p>Используйте фильтры для поиска интересных закономерностей</p>
+                        </div>
+                    </div>
+                </div>
+                    <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+
+
+            <h3>Проект &laquo;Куда уходят деньги&raquo;  <small>(Moscow edition)</small> </h3>
+            <p>Поиск и отображение на карте госконтрактов из Москвы.</p>
+            <a class="btn btn-info" href="@routes.Application.about" role="button">Подробнее</a>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <h3 class="page-header">Как использовать</h3>
+            <div>
+                <h5>1. <a class="btn btn-primary" href="@routes.Application.search_form">Начните поиск</a></h5>
+                <p class="help-block"> <small> Фильтры по различным параметрам, включая местоположения
+                    заказчиков и поставщиков
+                </small></p>
+            </div>
+            <div>
+                <h5>2. Исследуйте результаты </h5>
+                <p class="help-block"> <small> Смотрите результате на картах и диаграммах.
+                    Используйте фильтры для поиска интересных закономерностей
+                </small></p>
+            </div>
+            <div>
+                <h5>3. Опубликуйте </h5>
+                <p class="help-block"> <small> Придумайте имя для результатов поиска.
+                    Оно будет использовано для публикации в открытом списке результатов (после подтверждения модератором)
+                </small></p>
+            </div>
+            <div>
+                <h5>4. Поделитесь со знакомыми </h5>
+                <p class="help-block"> <small> опубликуйте результаты в социальных сетях
+                </small></p>
+            </div>
+
+
+            <h3 class="page-header">Недавние запросы</h3>
+
+            <div>
+                <h5><a href="#">Школьные принадлежности</a></h5>
+                <p class="help-block"><span class="glyphicon glyphicon-time"></span> два дня назад</p>
+            </div>
+            <div>
+                <h5><a href="#">Молоко депутатам</a></h5>
+                <p class="help-block"><span class="glyphicon glyphicon-time"></span> три дня назад</p>
+            </div>
+            <div>
+                <h5><a href="#">Эх, дороги</a></h5>
+                <p class="help-block"><span class="glyphicon glyphicon-time"></span> неделю назад</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+}

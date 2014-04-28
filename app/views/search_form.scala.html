@@ -1,0 +1,137 @@
+@(page: lib.html.Page, sForm: Form[models.SearchRequest])
+@import helper._
+@import bootstrap.tags._
+@import bootstrap.helpers._
+@slider(id: String, t1: Int=250, t2: Int=450, min: Int=10, max: Int=1000, step: Int=5) = {
+<input type="text" value="" id="@id" style="width: 100%"
+       data-slider-value="[@t1,@t2]"
+       data-slider-min="@min" data-slider-max="@max" data-slider-step="@step"
+       data-slider-handle="none"
+       xmlns="http://www.w3.org/1999/html"/>
+}
+@_value(name: String) = {@sForm(name).value.getOrElse("")}
+@value(name: String) = { value='@_value(name)' }
+@budget(id: Int) = { <input type="checkbox" name="budget[@id]" value="@id" @if(models.SearchRequest.getBudget(sForm, id)){ checked }else{}/> }
+@check(name: String) = { <input type="checkbox" name="@name"  @if(sForm(name).value){ checked }else{}/> }
+@script = {
+@css("leaflet")
+@css("leaflet-areaselect", false)
+@css("daterangepicker-bs3", false)
+@css("slider", false)
+@js("highcharts")
+@js("leaflet")
+@js("leaflet/leaflet-areaselect", false)
+@js("daterange/moment-with-langs", false)
+@js("daterange/daterangepicker", false)
+@js("utils/bootstrap-slider", false)
+@js("search-form", false)
+    <script type="text/javascript">
+
+        $(function() {
+            var date_start  = '@_value("date_from")';
+            var date_end    = '@_value("date_to")';
+            init_calendar(date_start, date_end);
+
+            var price_start  = '@_value("price_from")';
+            var price_end    = '@_value("price_to")';
+            init_pricer(price_start, price_end);
+
+            init_mini_graph("#container", "@routes.Application.histo");
+
+            init_mini_map();
+
+            var flag = $('input[name="geo_f"]' );
+            flag.change(function() {
+                $('.geo_label').css('font-weight', flag.prop('checked')?'bold':'normal');
+            });
+            flag.prop('checked', '@_value("geo_f")');
+            $('.geo_label').css('font-weight', flag.prop('checked')?'bold':'normal');
+
+            $("form").bind("keypress", function (e) {
+                if (e.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+    </script>
+}
+@********************************************************************************@
+@layout.layout(page, scripts=List(script)) {
+<div class="container">
+<div class="row">
+    <div class="col-lg-9">
+
+        <form action="@routes.Application.search_start" method="post" role="form">
+        @panel("default") { Поиск контрактов } {
+
+            @form_row("Фраза для поиска") {
+                <input id="phrase" name="phrase" type="text" class="form-control" placeholder="Введите текст для поиска" @value("phrase")>
+                <p class="help-block">Текст для поиска по предмету контракта</p>
+            }
+
+            @form_row("Дата контракта") {
+            <div class="form-group form-inline" id="date_group">
+                <input name="date_from" type="text" class="form-control" size="10" pattern="^\d\d\.\d\d\.201\d$">
+                <input name="date_from" type="hidden">
+                &nbsp; &mdash; &nbsp;
+                <input name="date_to"   type="text" class="form-control" size="10" pattern="^\d\d\.\d\d\.201\d$">
+                <input name="date_to"   type="hidden">
+                <a href="#" id="date_range" class="btn btn-primary">@fa("fa-calendar")</a>
+            </div>
+
+                <p class="help-block">Диапазон дат заключения контракта</p>
+            }
+            @form_row("Сумма контракта") {
+            <div class="form-group form-inline">
+                <input id="price_from" name="price_from" class="form-control" type="text" size="10" pattern="^\d+$">
+                &nbsp; &mdash; &nbsp;
+                <input id="price_to"   name="price_to"   class="form-control" type="text" size="10" pattern="^\d+$">
+            </div>
+
+            @slider("price_slider", sForm("price_from").value.get.toInt, sForm("price_to").value.get.toInt, 0, 1000000, 10)
+            <p class="help-block">Диапазон сумм контракта (руб)</p>
+            }
+
+            @form_row("Уровень бюджета") {
+                <label class="checkbox-inline"> @budget(0) Федеральный </label>
+                <label class="checkbox-inline"> @budget(1) Субъект федерации </label>
+                <label class="checkbox-inline"> @budget(2) Местный </label>
+            }
+
+            <hr/>
+
+            @form_row("Географическая область") {
+            <div class="areaselect form-inline">
+                <input name="sw_lat" type="text" size="6" disabled class="form-control"> ,                       <input name="sw_lat" type="hidden">
+                <input name="sw_lng" type="text" size="6" disabled class="form-control"> &nbsp; &mdash; &nbsp;   <input name="sw_lng" type="hidden">
+                <input name="ne_lat" type="text" size="6" disabled class="form-control"> ,                       <input name="ne_lat" type="hidden">
+                <input name="ne_lng" type="text" size="6" disabled class="form-control">                         <input name="ne_lng" type="hidden">
+                <label class='checkbox-inline pull-right'> @check("geo_f") <span class="geo_label">Учитывать при поиске</span> </label>
+            </div>
+            }
+
+        } {
+            <button class="btn btn-primary">Начать поиск</button>
+        }
+
+        </form>
+
+        @panel("default") { Количество контрактов по месяцам } {
+        <div id="container" style="min-width: 310px; width: 100%; height: 100px; margin: 0 auto"></div>
+        } { }
+
+
+    </div>
+    <div class="col-lg-3">
+
+        <div class="form-group">
+            <h5><label>Область поиска</label> <small>(опционально)</small></h5>
+
+            <div id="map" class="map"></div>
+        </div>
+
+    </div>
+</div>
+</div>
+}

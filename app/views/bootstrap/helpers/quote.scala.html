@@ -1,0 +1,7 @@
+@(header: String= "", clazz: String= "", cite: Html=Html(""))(body: => Html)
+@import _root_.views.html.bootstrap.tags._
+@if(header.trim.nonEmpty){<h4>@header</h4>}
+<blockquote@if(clazz.nonEmpty){ class="@clazz"}>
+    @body
+    @if(cite.body.trim.nonEmpty){<small>@cite</small>}
+</blockquote>

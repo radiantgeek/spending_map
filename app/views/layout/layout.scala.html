@@ -1,0 +1,50 @@
+@(page: lib.html.Page, styles: List[Html] = List(), scripts: List[Html] = List())(html: => Html)
+@import _root_.views.html.bootstrap.tags._
+@import _root_.views.html.bootstrap.helpers._
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingHeader())
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>@page.title</title>
+
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        @css("bootstrap.min")
+        @css("typeahead", false)
+        @css("font-awesome.min")
+        @css("main", false)
+        @css("app", false)
+        @css("components", false)
+        @for(c<-styles) { @c }
+
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+    </head>
+
+    <body>
+        <div id="wrapper">
+
+            @topbar(page)
+
+
+            <div id="page-wrapper">
+                @html
+            </div>
+                <!-- /#page-wrapper -->
+
+        </div>
+            <!-- /#wrapper -->
+
+        @js("jquery")
+        @js("bootstrap")
+        @js("app", false)
+        @for(c<-scripts) { @c }
+
+        <!-- Yandex.Metrika counter --><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter24721784 = new Ya.Metrika({id:24721784, webvisor:true, clickmap:true, trackLinks:true}); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/24721784" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
+
+        @Html(com.newrelic.api.agent.NewRelic.getBrowserTimingFooter())
+    </body>
+</html>

@@ -1,0 +1,18 @@
+@(clazz: String, headers: List[_]=List(), id: String="")(data: List[List[_]])
+@import _root_.views.html.bootstrap.tags._
+<table @if(id.nonEmpty){id="@id"} class="table @clazz">
+@if(headers.size>0){
+    <thead>
+    <tr>
+@for(h <- headers) { <th>@h</th> }
+    </tr>
+    </thead>
+}
+    <tbody>
+@for(l <- data) {
+    <tr>
+        @for(c <- l) { <td>@c</td> }
+    </tr>
+}
+    </tbody>
+</table>

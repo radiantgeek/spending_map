@@ -1,0 +1,30 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+GET     /new                        controllers.Application.search_form
+GET     /new/from/:id               controllers.Application.search_form_from(id: String)
+GET     /new/histo                  controllers.Application.histo
+POST    /new/start                  controllers.Application.search_start
+GET     /addr                       controllers.Application.addr
+GET     /about                      controllers.Application.about
+
+GET     /results                    controllers.Application.result_list
+POST    /result/publish             controllers.Application.result_publish
+GET     /results/:id                controllers.Application.results(id: String)
+GET     /req/:id/:page              controllers.Application.req(id: String, page: Long)
+
+GET     /contract/:regnum           controllers.Application.contract(regnum: String)
+GET     /customer/:regnum           controllers.Application.customer(regnum: String)
+GET     /customer/:regnum/addr      controllers.Application.customer_address(regnum: String)
+GET     /supplier/:inn/:kpp         controllers.Application.supplier(inn: String, kpp: String)
+GET     /supplier/:inn/:kpp/addr    controllers.Application.supplier_address(inn: String, kpp: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /webjars/*file              controllers.WebJarAssets.at(file)
+
+GET     /javascriptRoutes           controllers.Application.javascriptRoutes
+

@@ -1,0 +1,35 @@
+@(page: lib.html.Page)
+@import bootstrap.tags._
+@import bootstrap.helpers._
+@layout.layout(page) {
+
+<div class="container">
+<div class="row">
+
+    <div class="col-md-9">
+        <h3 class="page-header">Недавние запросы</h3>
+
+        <div>
+            <h5><a href="#">Школьные принадлежности</a></h5>
+            <p class="help-block"><span class="glyphicon glyphicon-time"></span> два дня назад</p>
+        </div>
+        <div>
+            <h5><a href="#">Молоко депутатам</a></h5>
+            <p class="help-block"><span class="glyphicon glyphicon-time"></span> три дня назад</p>
+        </div>
+        <div>
+            <h5><a href="#">Эх, дороги</a></h5>
+            <p class="help-block"><span class="glyphicon glyphicon-time"></span> неделю назад</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <h3 class="page-header">О проекте</h3>
+        <p>Поиск и отображение на карте госконтрактов из Москвы.</p>
+        <a class="btn btn-default" href="@routes.Application.about" role="button">Подробнее</a>
+    </div>
+
+</div>
+</div>
+
+}

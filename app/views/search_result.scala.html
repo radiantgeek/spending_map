@@ -1,0 +1,181 @@
+@(page: lib.html.Page, search: models.SearchRequest)
+@import bootstrap.tags._
+@import bootstrap.helpers._
+@script = {
+@css("dc", false)
+@css("dataTables.bootstrap", false)
+@css("leaflet")
+@css("leaflet.awesome-markers", false)
+@css("MarkerCluster", false)
+@css("MarkerCluster.Default", false)
+
+@js("datatable/jquery.dataTables", false)
+@js("datatable/dataTables.bootstrap", false)
+@js("leaflet")
+@js("leaflet/leaflet.awesome-markers", false)
+@js("leaflet/leaflet.markercluster", false)
+@js("leaflet/leaflet-hash", false)
+@js("leaflet/simpleheat", false)
+@js("leaflet/leaflet-heat.src", false)
+
+@js("search-result", false)
+
+@js("lib/underscore", false)
+@js("lib/colorbrewer", false)
+@js("lib/d3", false)
+@js("crossfilter/crossfilter", false)
+@js("crossfilter/dc", false)
+
+@js("search-stat", false)
+
+<script type="text/javascript">
+    $(function() {
+        var bounds    = @if(search.geo) { [[ @search.sw_lat, @search.sw_lng ], [ @search.ne_lat, @search.ne_lng ] ] ; } else {false; }
+        var startDate = @lib.DateUtils.jsDate(search.date_from.minusDays(5));
+        var stopDate  = @lib.DateUtils.jsDate(search.date_to.plusDays(5));
+        initStatGraph(startDate, stopDate);
+
+        showResultMap("@search.id", true, bounds);
+    });
+</script>
+
+}
+@data_table(id: String, headers: List[String]) = {
+<table class="table table-hover @id"> <thead>
+    <tr class="header"> @for(i <- headers) { <th>@i</th> } </tr>
+</thead> </table>
+}
+@chart(title: String, id: String) = {
+    <div id="@id-chart">
+        <div class="row">
+            <strong>@title</strong>
+            <a class="reset" href="javascript:@{id}Chart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        </div>
+    </div>
+}
+@layout.layout(page, scripts=List(script)) {
+
+    <div class="row">
+    <div class="col-lg-10 col-md-9">
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+            <div class="tab-pane fade in active" id="tab_map">
+                <div id="map" class="map"></div>
+            </div>
+
+            <div class="tab-pane fade" id="tab_table" style="padding: 10px">
+                <div class="row">
+                    <div class="dc-data-count pull-right">
+                        Отображено <span class="filter-count"></span> из <span class="total-count"></span> найденных
+                        | <a href="javascript:dc.filterAll(); dc.renderAll();">Убрать фильтры</a>
+                    </div>
+                </div>
+
+                <div class="row"> @h(4, "Дата подписания контракта", "фильтр по времени:") </div>
+                <div class="row">
+                    <div id="date-chart" class="dc-chart"></div>
+                </div>
+
+                <div class="row"> @h(4, "Сумма контракта", "фильтр") </div>
+                <div class="row">
+                    <div id="price-chart" class="dc-chart"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+@chart("Заказчики", "customerBubble")
+                    </div>
+                    <div class="col-md-6">
+@chart("Подрядчики", "supplierBubble")
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3"> @chart("Кол-во по кварталам",    "quarterCount") </div>
+                    <div class="col-md-3"> @chart("Сумма по кварталам",     "quarterSum") </div>
+                    <div class="col-md-3"> @chart("Кол-во по дням недели",  "dayOfWeekCount") </div>
+                    <div class="col-md-3"> @chart("Сумма по дням недели",   "dayOfWeekSum") </div>
+                </div>
+
+                <div class="row">
+@data_table("dc-data-table", List("Контракт", "Подписан", "Заказчик", "Подрядчик", "Сумма"))
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-2 col-md-3">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="#tab_map" data-toggle="tab">Карта</a> </li>
+            <li><a href="#tab_table" data-toggle="tab">Данные</a> </li>
+        </ul>
+
+        @h(4, "Результаты поиска")
+
+        <div id="search-in-progress">
+        @progress("result-search", "", 0, 0, 100)
+        </div>
+
+        @panel("success") { Статистика } {
+            @h(6, "Найдено контрактов", "фильтрация по геопозиции")
+            <table class="table table-stripped"> <tbody>
+                <tr> <td><small>Отфильтровано</small></td>   <td><span id="result-search-filtered">?</span></td>  </tr>
+                <tr> <td><small>Проверено</small></td>       <td><span id="result-search-current">?</span></td>  </tr>
+                <tr> <td><small>Найдено</small></td>         <td><span id="result-search-max">?</span></td>  </tr>
+            </tbody> </table>
+            @h(6, "Найдено адресов")
+            <table class="table table-stripped"> <tbody>
+                <tr class="customers-count"> <td><small>Заказчиков</small></td>   <td class="filter-count">?</td>  <td class="total-count">?</td> </tr>
+                <tr class="suppliers-count"> <td><small>Поставщиков</small></td>  <td class="filter-count">?</td>  <td class="total-count">?</td> </tr>
+            </tbody> </table>
+        } { }
+
+        @panel("") { } {
+            <a href='@routes.Application.search_form_from(search.id.get)' class="btn btn-primary">Новый поиск</a>
+            <button class="btn btn-success" data-toggle="modal" data-target="#shareDlg">Share</button>
+        } { }
+
+        @panel("default") { Параметры } {
+            <table class="table table-stripped"> <tbody>
+@if(search.text.nonEmpty) { <tr> <td><small>Фраза</small></td> <td>@search.text.get</td> </tr> }
+<tr> <td><small>Дата заключения</small></td>  <td><small>@search.dateFrom &mdash; @search.dateTo </small></td> </tr>
+@if(search.priceFrom>0||search.priceTo>0) { <tr> <td><small>Цена контракта</small></td>     <td><small>@search.priceFrom &mdash; @search.priceTo </small></td> </tr> }
+<tr> <td><small>Регион</small></td> <td>Москва</td> </tr>
+            </tbody> </table>
+        } { }
+
+        @modal("shareDlg", "Опубликовать") {
+                <input name="search_id" type="hidden" value="@search.id.get">
+                @form_row("Название") {
+                    <input name="search_text" type="text" class="form-control" placeholder="Введите название" @if(search.text.nonEmpty){value="@search.text.get"}>
+                    <p class="help-block">Название поиска (для публикации в открытом списке результатов)</p>
+                }
+
+                <p class="help-block"><small>NB. В открытом списке результатов будет опубликован после одобрения модератором</small></p>
+
+            @*
+            <div class="row">
+                <div class="col-sm-3">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="ZZZZZ" data-size="large" data-count="none" data-hashtags="SpendingMap">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                </div>
+                <div class="col-sm-3">
+                    <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-type="button"></div>
+                </div>
+                <div class="col-sm-3">
+                    <script type="text/javascript"><!--
+                    document.write(VK.Share.button(false,{type: "round_nocount", title: 'ГосКонтракты с помощью ', description: 'Результаты поиска московских госконтрактов с помощью msk.spending-map.info', text: "Поделиться"}));
+                    --></script>
+                </div>
+            </div>
+            *@
+        } {
+            <button type="button" class="btn btn-primary" onclick="javascript: publishResult();">Опубликовать</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Отмена</button>
+        }
+
+    </div>
+}

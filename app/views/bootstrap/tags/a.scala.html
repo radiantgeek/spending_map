@@ -1,0 +1,2 @@
+@(l: lib.html.tags.Link)
+<a href="@l.href" @if(l.clazz.nonEmpty){ class="clazz"}>@if(l.icon.nonEmpty){ @fa(l.icon) }@l.title</a>

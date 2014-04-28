@@ -1,0 +1,2 @@
+@(clazz: String, other: Html=Html(""), dismiss: String= "", toggle: String= "")(body: => Html)
+<button type="button" class="btn btn-@clazz" @if(toggle.nonEmpty){data-toggle="@toggle"} @if(dismiss.nonEmpty){data-dismiss="@dismiss"}@other>@body</button>
